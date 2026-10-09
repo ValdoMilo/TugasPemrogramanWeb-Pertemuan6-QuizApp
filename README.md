@@ -1,5 +1,5 @@
-[readme_pertemuan_5_quiz_app.md](https://github.com/user-attachments/files/33246200/readme_pertemuan_5_quiz_app.md)
-# Interactive Quiz App - Tugas Pemrograman Web (Pertemuan 5)
+[readme_pertemuan_6_quiz_app.md](https://github.com/user-attachments/files/33246200/readme_pertemuan_5_quiz_app.md)
+# Interactive Quiz App - Tugas Pemrograman Web (Pertemuan 6)
 
 Repository ini berisi *source code* untuk tugas mata kuliah Pemrograman Web pada pertemuan kelima. Proyek ini berfokus pada pembuatan **Aplikasi Kuis Interaktif (Quiz App)** berbasis web yang memanfaatkan JavaScript murni (Vanilla JS) untuk pengelolaan logika permainan, manipulasi DOM, dan sistem penilaian.
 
