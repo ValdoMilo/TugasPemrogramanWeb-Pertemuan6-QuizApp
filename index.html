@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="Interactive Quiz App - Uji pengetahuanmu dengan 50+ pertanyaan!" />
+  <title>Interactive Quiz App | Uji Pengetahuanmu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ================= START SCREEN ================= -->
+    <section class="screen start-screen" id="start-screen">
+      <div class="brand">
+        <span class="brand-badge">Quiz Interaktif</span>
+        <h1 class="brand-title">Uji Pengetahuanmu</h1>
+        <p class="brand-subtitle">
+          Pilih kategori dan level, jawab pertanyaan, kumpulkan poin, dan pecahkan rekor tertinggi.
+        </p>
+      </div>
+
+      <div class="settings">
+        <div class="settings-group">
+          <label class="settings-label">Kategori</label>
+          <div class="chip-group" id="category-group">
+            <button type="button" class="chip active" data-category="all">Semua</button>
+            <button type="button" class="chip" data-category="JavaScript">JavaScript</button>
+            <button type="button" class="chip" data-category="CSS">CSS</button>
+            <button type="button" class="chip" data-category="HTML">HTML</button>
+            <button type="button" class="chip" data-category="Umum">Umum</button>
+            <button type="button" class="chip" data-category="Logika">Logika</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label class="settings-label">Level Kesulitan</label>
+          <div class="chip-group" id="difficulty-group">
+            <button type="button" class="chip active" data-difficulty="all">Semua</button>
+            <button type="button" class="chip" data-difficulty="easy">Mudah</button>
+            <button type="button" class="chip" data-difficulty="medium">Sedang</button>
+            <button type="button" class="chip" data-difficulty="hard">Sulit</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label class="settings-label">Waktu per Soal</label>
+          <div class="chip-group" id="time-group">
+            <button type="button" class="chip" data-time="10">10 detik</button>
+            <button type="button" class="chip active" data-time="15">15 detik</button>
+            <button type="button" class="chip" data-time="30">30 detik</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="start-info">
+        <div class="info-card">
+          <span class="info-label">Jumlah Soal</span>
+          <span class="info-value" id="start-total-q">5</span>
+        </div>
+        <div class="info-card">
+          <span class="info-label">Waktu / Soal</span>
+          <span class="info-value" id="start-time">15s</span>
+        </div>
+        <div class="info-card">
+          <span class="info-label">Skor Tertinggi</span>
+          <span class="info-value" id="start-highscore">0</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" id="start-btn" type="button">
+        Mulai Kuis
+      </button>
+
+      <button class="btn btn-ghost btn-block" id="leaderboard-btn" type="button">
+        Lihat Leaderboard
+      </button>
+
+      <p class="muted small-text">Tips: jawab cepat untuk bonus poin lebih tinggi.</p>
+    </section>
+
+    <!-- ================= QUIZ SCREEN ================= -->
+    <section class="screen quiz-screen" id="quiz-screen" hidden>
+      <header class="quiz-header">
+        <div class="quiz-meta">
+          <span class="category-pill" id="question-category">Umum</span>
+          <span class="difficulty-pill" id="question-difficulty">Mudah</span>
+          <span class="question-counter">
+            <strong id="q-current">1</strong> / <span id="q-total">5</span>
+          </span>
+        </div>
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Ubah tema" title="Ubah tema">
+          <span class="theme-icon">☀</span>
+        </button>
+      </header>
+
+      <div class="progress-wrap" aria-hidden="true">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="timer-wrap">
+        <div class="timer-circle" id="timer-circle">
+          <svg viewBox="0 0 48 48" class="timer-svg">
+            <circle cx="24" cy="24" r="20" class="timer-track"></circle>
+            <circle cx="24" cy="24" r="20" class="timer-progress" id="timer-progress"></circle>
+          </svg>
+          <span class="timer-text" id="timer-text">15</span>
+        </div>
+
+        <div class="quiz-stats">
+          <div class="score-live">
+            <span class="score-label">Skor</span>
+            <span class="score-value" id="live-score">0</span>
+          </div>
+          <div class="streak-live" id="streak-live">
+            <span class="streak-value"><span id="live-streak">0</span>x</span>
+          </div>
+        </div>
+      </div>
+
+      <article class="question-card" id="question-card">
+        <h2 class="question-text" id="question-text">Pertanyaan muncul di sini…</h2>
+        <div class="options" id="options-container"></div>
+      </article>
+
+      <div class="helpers">
+        <button class="helper-btn" id="fifty-btn" type="button">
+          50:50 &mdash; buang 2 jawaban salah
+        </button>
+      </div>
+
+      <div class="feedback" id="feedback" hidden>
+        <span class="feedback-icon" id="feedback-icon">✓</span>
+        <div class="feedback-content">
+          <span class="feedback-text" id="feedback-text">Jawaban benar!</span>
+          <span class="feedback-explanation" id="feedback-explanation"></span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-next" id="next-btn" type="button" hidden>
+        Soal Berikutnya
+      </button>
+    </section>
+
+    <!-- ================= RESULT SCREEN ================= -->
+    <section class="screen result-screen" id="result-screen" hidden>
+      <div class="result-hero">
+        <h2 class="result-title" id="result-title">Kuis Selesai</h2>
+        <p class="result-subtitle" id="result-subtitle">Ini hasilmu</p>
+      </div>
+
+      <div class="result-score-box">
+        <div class="result-score-circle">
+          <svg viewBox="0 0 120 120" class="score-ring">
+            <circle cx="60" cy="60" r="52" class="ring-track"></circle>
+            <circle cx="60" cy="60" r="52" class="ring-progress" id="ring-progress"></circle>
+          </svg>
+          <div class="result-score-inner">
+            <span class="result-percent" id="result-percent">0%</span>
+            <span class="result-label">Akurasi</span>
+          </div>
+        </div>
+        <div class="result-stats">
+          <div class="stat-item">
+            <span class="stat-value correct" id="stat-correct">0</span>
+            <span class="stat-label">Benar</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value wrong" id="stat-wrong">0</span>
+            <span class="stat-label">Salah</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-total">5</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-score">0</span>
+            <span class="stat-label">Poin</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="highscore-banner" id="highscore-banner" hidden>
+        Rekor baru! Kamu memecahkan skor tertinggi sebelumnya.
+      </div>
+
+      <div class="result-highscore">
+        <span class="muted">Skor Tertinggi: </span>
+        <strong id="result-highscore">0</strong>
+      </div>
+
+      <div class="review-section" id="review-section">
+        <button class="review-toggle" id="review-toggle" type="button">
+          <span>Lihat Review Jawaban</span>
+          <span class="review-arrow" id="review-arrow">▾</span>
+        </button>
+        <div class="review-list" id="review-list" hidden></div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-primary btn-lg" id="restart-btn" type="button">
+          Main Lagi
+        </button>
+        <button class="btn btn-ghost btn-block" id="home-btn" type="button">
+          Kembali ke Beranda
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= MODAL LEADERBOARD ================= -->
+  <div class="modal" id="leaderboard-modal" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Leaderboard</h3>
+        <button class="icon-btn modal-close" id="modal-close" type="button" aria-label="Tutup">✕</button>
+      </div>
+      <div class="leaderboard-list" id="leaderboard-list"></div>
+      <button class="btn btn-ghost btn-block btn-clear-lb" id="clear-lb-btn" type="button">
+        Hapus Semua Skor
+      </button>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
